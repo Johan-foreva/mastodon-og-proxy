@@ -43,7 +43,7 @@ export default async function handler(req, res) {
 <html>
 <head>
   <meta property="og:title" content="${title}" />
-  <meta property="og:description" content="${desc}" />
+  <meta property="og:description" content="${desc}&#10;Ссылка на пост: ${targetUrl}" />
   <meta property="og:image" content="${img}" />
   <meta property="og:url" content="${targetUrl}" />
   <meta property="og:type" content="article" />
