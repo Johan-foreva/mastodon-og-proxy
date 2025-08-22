@@ -45,13 +45,13 @@ export default async function handler(req, res) {
   <meta property="og:title" content="${title}" />
   <meta property="og:description" content="${desc}" />
   <meta property="og:image" content="${img}" />
-  <meta property="og:url" content="${url}" />
+  <meta property="og:url" content="${targetUrl}" />
   <meta property="og:type" content="article" />
   <meta name="twitter:card" content="summary_large_image" />
   <title>${title}</title>
 </head>
 <body>
-  <p>OG Proxy for <a href="${url}">${url}</a></p>
+  <p>OG Proxy for <a href="${targetUrl}">${targetUrl}</a></p>
   ${img ? `<img src="${img}" alt="OG image" style="max-width:100%;">` : ""}
 </body>
 </html>`);
