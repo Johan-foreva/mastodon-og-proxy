@@ -43,7 +43,7 @@ export default async function handler(req, res) {
 <html>
 <head>
   <meta property="og:title" content="${title}" />
-  <meta property="og:description" content="${desc}&#10;Ссылка на пост: ${targetUrl}" />
+  <meta property="og:description" content="${desc}" />
   <meta property="og:image" content="${img}" />
   <meta property="og:url" content="${targetUrl}" />
   <meta property="og:type" content="article" />
@@ -51,8 +51,13 @@ export default async function handler(req, res) {
   <title>${title}</title>
 </head>
 <body>
-  <p>OG Proxy for <a href="${targetUrl}">${targetUrl}</a></p>
-  ${img ? `<img src="${img}" alt="OG image" style="max-width:100%;">` : ""}
+  <p>Redirecting to original post...</p>
+  <script>
+    window.location.href = "${targetUrl}";
+  </script>
+  <noscript>
+    <a href="${targetUrl}">Click here if not redirected</a>
+  </noscript>
 </body>
 </html>`);
   } catch (e) {
