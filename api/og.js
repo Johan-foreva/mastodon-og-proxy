@@ -45,7 +45,7 @@ export default async function handler(req, res) {
   <meta property="og:title" content="${title}" />
   <meta property="og:description" content="${desc}" />
   <meta property="og:image" content="${img}" />
-  <meta property="og:url" content="https://test.com" />
+  <meta property="og:url" content="${targetUrl}" />
   <meta property="og:type" content="article" />
   <meta name="twitter:card" content="summary_large_image" />
   <title>${title}</title>
