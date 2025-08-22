@@ -3,32 +3,41 @@ import { JSDOM } from "jsdom";
 
 export default async function handler(req, res) {
   try {
-    const targetUrl = req.query.url; // Получаем URL из query
+    const targetUrl = req.query.url;
     if (!targetUrl) {
       return res.status(400).send("No URL provided. Use ?url=<URL>");
     }
 
-    // Получаем HTML целевой страницы
-    const r = await fetch(targetUrl);
+    // fetch с User-Agent, как у браузера
+    const r = await fetch(targetUrl, {
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0 Safari/537.36",
+      },
+    });
     if (!r.ok) {
       return res.status(500).send("Failed to fetch target URL");
     }
 
     const html = await r.text();
-    const dom = new JSDOM(html);
 
-    // Функция для поиска meta-тега
-    const meta = (prop) =>
-      dom.window.document.querySelector(`meta[property='${prop}']`)?.content ||
-      dom.window.document.querySelector(`meta[name='${prop}']`)?.content ||
-      "";
+    let title = "", desc = "", img = "";
+    try {
+      const dom = new JSDOM(html);
+      const meta = (prop) =>
+        dom.window.document.querySelector(`meta[property='${prop}']`)?.content ||
+        dom.window.document.querySelector(`meta[name='${prop}']`)?.content ||
+        "";
 
-    const title = meta("og:title") || dom.window.document.title || "No title";
-    const desc = meta("og:description") || "";
-    const img = meta("og:image") || "";
-    const url = meta("og:url") || targetUrl;
+      title = meta("og:title") || dom.window.document.title || "No title";
+      desc = meta("og:description") || "";
+      img = meta("og:image") || "";
+    } catch (e) {
+      console.error("Error parsing HTML:", e);
+    }
 
-    // Отдаём страницу с OG-метатегами
+    const url = targetUrl;
+
     res.setHeader("Content-Type", "text/html; charset=utf-8");
     res.end(`<!DOCTYPE html>
 <html>
@@ -47,7 +56,7 @@ export default async function handler(req, res) {
 </body>
 </html>`);
   } catch (e) {
-    console.error(e);
+    console.error("Internal error:", e);
     res.status(500).send("Internal Server Error: " + e.message);
   }
 }
